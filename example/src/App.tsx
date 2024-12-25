@@ -1,17 +1,65 @@
-import { useState, useEffect } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'react-native-app-icon-changer';
+import { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, Button } from 'react-native';
+import {
+  setIcon,
+  getAllAlternativeIcons,
+  resetIcon,
+  getActiveIcon,
+} from 'react-native-app-icon-changer';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
+  const [icons, setIcons] = useState<[] | string[]>([]);
+
+  const changeIconHandler = async (iconName: string) => {
+    try {
+      const response = await setIcon(iconName);
+      console.log('Success', response);
+    } catch (error) {
+      console.log('Error', JSON.stringify(error));
+    }
+  };
+
+  const getActiveIconHandler = async () => {
+    try {
+      const currentIcon = await getActiveIcon();
+      console.log('Active Icon', currentIcon);
+    } catch (error) {
+      console.log('Error', JSON.stringify(error));
+    }
+  };
+
+  const resetIconHandler = async () => {
+    try {
+      const response = await resetIcon();
+      console.log('Success', response);
+    } catch (error) {
+      console.log('Error', JSON.stringify(error));
+    }
+  };
 
   useEffect(() => {
-    multiply(3, 7).then(setResult);
+    (async () => {
+      const icons = await getAllAlternativeIcons();
+      setIcons(icons);
+    })();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>
+        Icons:{icons.join(', ')}
+        {icons.map((icon) => {
+          return (
+            <Button
+              key={icon}
+              title={icon}
+              onPress={changeIconHandler.bind(null, icon)}
+            />
+          );
+        })}
+        <Button title={'Reset'} onPress={resetIconHandler} />
+        <Button title={'Active Icon'} onPress={getActiveIconHandler} />
+      </Text>
     </View>
   );
 }

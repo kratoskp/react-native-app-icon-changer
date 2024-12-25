@@ -48,5 +48,53 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcon</string>
+			</array>
+		</dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>NewYearIcon</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>NewYearIcon</string>
+				</array>
+			</dict>
+			<key>November10</key> 
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>November10</string>
+				</array>
+			</dict>
+			<key>ChildCelebrationV1</key> 
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ChildCelebrationV1</string>
+				</array>
+			</dict>
+			<key>ChildCelebrationV2</key> 
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ChildCelebrationV2</string>
+				</array>
+			</dict>
+			<key>Celebration</key> 
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>Celebration</string>
+				</array>
+			</dict>
+		</dict>
+	</dict>
 </dict>
 </plist>

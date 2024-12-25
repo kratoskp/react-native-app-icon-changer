@@ -1,12 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
+
 
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
-      android:icon="@mipmap/ic_launcher"
-      android:roundIcon="@mipmap/ic_launcher_round"
+      android:icon="@mipmap/ic_launcher_default"
+      android:roundIcon="@mipmap/ic_launcher_default_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
       android:supportsRtl="true">
@@ -22,5 +24,83 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+      <activity-alias
+            android:name="${applicationId}.MainActivityDefault"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_default"
+            android:roundIcon="@mipmap/ic_launcher_default_round"
+            android:label="@string/app_name"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+      </activity-alias>           
+      <activity-alias
+            android:name="${applicationId}.MainActivityNewYear"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_new_year"
+            android:roundIcon="@mipmap/ic_launcher_new_year_round"
+            android:label="@string/app_name"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name="${applicationId}.MainActivityCelebration"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_celebration"
+            android:roundIcon="@mipmap/ic_launcher_celebration_round"
+            android:label="@string/app_name"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name="${applicationId}.MainActivityChildCelebrationV1"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_childcelebrationv1"
+            android:roundIcon="@mipmap/ic_launcher_childcelebrationv1_round"
+            android:label="@string/app_name"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+       <activity-alias
+            android:name="${applicationId}.MainActivityChildCelebrationV2"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_childcelebrationv2"
+            android:roundIcon="@mipmap/ic_launcher_childcelebrationv2_round"
+            android:label="@string/app_name"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+       <activity-alias
+            android:name="${applicationId}.MainActivityNovember10"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_november10"
+            android:roundIcon="@mipmap/ic_launcher_november10_round"
+            android:label="@string/app_name"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
     </application>
 </manifest>

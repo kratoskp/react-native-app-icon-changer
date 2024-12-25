@@ -8,7 +8,8 @@ import com.facebook.react.uimanager.ViewManager
 
 class AppIconChangerPackage : ReactPackage {
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-    return listOf(AppIconChangerModule(reactContext))
+    val packageName = reactContext.packageName
+    return listOf(AppIconChangerModule(reactContext, packageName))
   }
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
