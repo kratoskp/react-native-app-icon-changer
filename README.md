@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/react-native-app-icon-changer.svg)](https://badge.fury.io/js/react-native-app-icon-changer)
+![GitHub stars](https://img.shields.io/github/stars/FerhatAdibelli0/react-native-app-icon-changer?style=social)
+
 # React Native App Icon Changer Setup
 
 `react-native-app-icon-changer` is a powerful and easy-to-use library that allows you to dynamically manage app icons in your React Native projects. It supports both iOS and Android platforms, enabling seamless switching between multiple app icons without requiring manual intervention or complex configuration. Whether you want to personalize your app's appearance or highlight special events, this library simplifies the entire process.
@@ -16,7 +19,7 @@ npm install react-native-app-icon-changer
 
 ---
 
-### 2. iOS Directory Structure
+## 2. iOS Directory Structure
 
 Ensure your project contains the following directory structure within the `ios` folder:
 
@@ -167,17 +170,17 @@ This function sets the app icon to the specified icon name.
 - **Example:**
 
 ```javascript
-import ChangeIcon from "react-native-app-icon-changer";
+import ChangeIcon from 'react-native-app-icon-changer';
 
 // Switch to the alternative icon
-ChangeIcon.setIcon("AlternativeIcon")
-  .then(() => console.log("Icon changed successfully!"))
-  .catch((err) => console.error("Failed to change icon: ", err));
+ChangeIcon.setIcon('AlternativeIcon')
+  .then(() => console.log('Icon changed successfully!'))
+  .catch((err) => console.error('Failed to change icon: ', err));
 
 // Revert to the primary icon
 ChangeIcon.setIcon(null)
-  .then(() => console.log("Reverted to the default icon!"))
-  .catch((err) => console.error("Failed to revert icon: ", err));
+  .then(() => console.log('Reverted to the default icon!'))
+  .catch((err) => console.error('Failed to revert icon: ', err));
 ```
 
 #### 6.2 `getActiveIcon(): Promise<string | null>`
@@ -190,8 +193,8 @@ This function retrieves the name of the currently active icon.
 
 ```javascript
 ChangeIcon.getActiveIcon()
-  .then((activeIcon) => console.log("Current active icon:", activeIcon))
-  .catch((err) => console.error("Failed to get active icon: ", err));
+  .then((activeIcon) => console.log('Current active icon:', activeIcon))
+  .catch((err) => console.error('Failed to get active icon: ', err));
 ```
 
 #### 6.3 `getAlternativeIcons(): Promise<string[]>`
@@ -204,8 +207,8 @@ This function retrieves a list of all alternative icons defined in the `Info.pli
 
 ```javascript
 ChangeIcon.getAlternativeIcons()
-  .then((icons) => console.log("Available alternative icons:", icons))
-  .catch((err) => console.error("Failed to get alternative icons: ", err));
+  .then((icons) => console.log('Available alternative icons:', icons))
+  .catch((err) => console.error('Failed to get alternative icons: ', err));
 ```
 
 #### 6.4 `resetIcon(): Promise<void>`
@@ -216,8 +219,8 @@ This function resets the app icon to the primary icon.
 
 ```javascript
 ChangeIcon.resetIcon()
-  .then(() => console.log("Icon reset to primary successfully!"))
-  .catch((err) => console.error("Failed to reset icon: ", err));
+  .then(() => console.log('Icon reset to primary successfully!'))
+  .catch((err) => console.error('Failed to reset icon: ', err));
 ```
 
 ---
@@ -233,7 +236,123 @@ Test the implementation by running your app on an iOS simulator or physical devi
 
 ---
 
-### 8. References
+## 8.Android setup
+
+You don’t need to manually link or configure anything beyond placing the icons in the correct mipmap/ folders and modifing AndroidManifest.xml file. Simply install the app and follow the instructions below, and everything will be set up automatically.
+
+### Upload Icons
+
+Use Android Studio's Asset Studio: Android Studio provides an easy way to generate different icon sizes. You can use the Image Asset Studio (found under File > New > Image Asset) to generate all the necessary icon sizes for different screen densities.
+
+Naming Icons Consistently: Ensure all icon images have consistent names (e.g., ic_launcher.png, ic_launcher_round.png), so they are easily referenced across your project.
+
+Make sure you correctly reference the image name in your AndroidManifest.xml file. The icon file name should match exactly the name of the image you placed in the mipmap/ folder
+
+```
+<project-root>/
+└── app/
+    └── src/
+        └── main/
+            └── res/
+                ├── mipmap-hdpi/
+                │   └── ic_launcher_default.png
+                │   └── ic_launcher_alternative.png
+                │   └── ic_launcher_round_default.png
+                │   └── ic_launcher_round_alternative.png
+                ├── mipmap-mdpi/
+                │   └── ic_launcher_default.png
+                │   └── ic_launcher_alternative.png
+                │   └── ic_launcher_round_default.png
+                │   └── ic_launcher_round_alternative.png
+                ├── mipmap-xhdpi/
+                │   └── ic_launcher_default.png
+                │   └── ic_launcher_alternative.png
+                │   └── ic_launcher_round_default.png
+                │   └── ic_launcher_round_alternative.png
+                ├── mipmap-xxhdpi/
+                │   └── ic_launcher_default.png
+                │   └── ic_launcher_alternative.png
+                │   └── ic_launcher_round_default.png
+                │   └── ic_launcher_round_alternative.png
+                ├── mipmap-xxxhdpi/
+                │   └── ic_launcher_default.png
+                │   └── ic_launcher_alternative.png
+                │   └── ic_launcher_round_default.png
+                │   └── ic_launcher_round_alternative.png
+                ├── mipmap/
+                │   └── ic_launcher_default.png
+                │   └── ic_launcher_alternative.png
+                │   └── ic_launcher_round_default.png
+                │   └── ic_launcher_round_alternative.png
+                └── ...
+```
+
+### AndroidManifest File Setup
+
+```
+<project-root>/
+└── app/
+    └── src/
+        └── main/
+            └── AndroidManifest.xml
+```
+
+This configuration illustrates how to set up activity-alias elements and icon sets in the AndroidManifest.xml file. All activity aliases are initially disabled (android:enabled="false"), and default icons are used. The aliases are based on the ${applicationId} placeholder and use .MainActivity as the base activity.
+
+    <application
+      android:name=".MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher_default"
+      android:roundIcon="@mipmap/ic_launcher_default_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme"
+      android:supportsRtl="true">
+      <activity
+        android:name=".MainActivity"
+        android:label="@string/app_name"
+        android:configChanges="keyboard|keyboardHidden|orientation"
+        android:launchMode="singleTask"
+        android:windowSoftInputMode="adjustResize"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+      </activity>
+      <activity-alias
+            android:name="${applicationId}.MainActivityDefault"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_default"
+            android:roundIcon="@mipmap/ic_launcher_round_default"
+            android:label="@string/app_name"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+      </activity-alias>
+      <activity-alias
+            android:name="${applicationId}.MainActivityAlternativeIcon"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_alternative"
+            android:roundIcon="@mipmap/ic_launcher_round_alternative"
+            android:label="@string/app_name"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+    </application>
+
+### Permission
+
+This permission is required if your app needs to enable or disable components dynamically, such as enabling/disabling activities, services, or receivers (e.g., using activity-alias in the manifest).
+
+    <uses-permission android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
+
+### 9. References
 
 Refer to the official package documentation for more details: [react-native-app-icon-changer](https://www.npmjs.com/package/react-native-app-icon-changer).
-
