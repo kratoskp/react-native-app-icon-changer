@@ -1,33 +1,239 @@
-# react-native-app-icon-changer
+# React Native App Icon Changer Setup
 
-react-native-app-icon-changer is a tool for easily updating the app icon of your React Native project for both iOS and Android platforms. This package simplifies the process of changing the default app icon without needing to manually modify platform-specific assets or configurations. It automates the generation of required icon sizes and updates the necessary files in your project, making the process quick and seamless.
+`react-native-app-icon-changer` is a powerful and easy-to-use library that allows you to dynamically manage app icons in your React Native projects. It supports both iOS and Android platforms, enabling seamless switching between multiple app icons without requiring manual intervention or complex configuration. Whether you want to personalize your app's appearance or highlight special events, this library simplifies the entire process.
 
-## Installation
-
-```sh
-npm install react-native-app-icon-changer
-```
-
-## Usage
-
-
-```js
-import { multiply } from 'react-native-app-icon-changer';
-
-// ...
-
-const result = await multiply(3, 7);
-```
-
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
-
-MIT
+With `react-native-app-icon-changer`, you can dynamically change your app's icon during runtime. The package handles all necessary platform-specific configurations, ensuring a smooth integration process. Its primary use cases include event-based icon changes, seasonal themes, or user-specific customizations, providing enhanced user engagement and experience.
 
 ---
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+### 1. Install the `react-native-app-icon-changer` Package
+
+Ensure you have the package installed in your project:
+
+```bash
+npm install react-native-app-icon-changer
+```
+
+---
+
+### 2. iOS Directory Structure
+
+Ensure your project contains the following directory structure within the `ios` folder:
+
+```
+Images.xcassets
+├── AppIcon.appiconset
+├── AlternativeIcon.appiconset
+    ├── 16.png
+    ├── 20.png
+    ├── 29.png
+    ├── 32.png
+    ├── 40.png
+    ├── 48.png
+    ├── 50.png
+    ├── 55.png
+    ├── 57.png
+    ├── 58.png
+    ├── 60.png
+    ├── 64.png
+    ├── 66.png
+    ├── 72.png
+    ├── 76.png
+    ├── 80.png
+    ├── 87.png
+    ├── 88.png
+    ├── 92.png
+    ├── 100.png
+    ├── 102.png
+    ├── 108.png
+    ├── 114.png
+    ├── 120.png
+    ├── 128.png
+    ├── 144.png
+    ├── 152.png
+    ├── 167.png
+    ├── 172.png
+    ├── 180.png
+    ├── 196.png
+    ├── 216.png
+    ├── 234.png
+    ├── 256.png
+    ├── 258.png
+    ├── 512.png
+    ├── 1024.png
+    └── Contents.json
+```
+
+Ensure each icon is correctly sized and available in `AppIcon.appiconset` (primary icon) and `AlternativeIcon.appiconset` (alternative icon).
+
+---
+
+### 3. Contents.json Example
+
+Ensure both `AppIcon.appiconset` and `AlternativeIcon.appiconset` include a `Contents.json` file. Below is an example:
+
+```json
+{
+  "images": [
+    {
+      "size": "20x20",
+      "idiom": "iphone",
+      "filename": "20.png",
+      "scale": "2x"
+    },
+    {
+      "size": "20x20",
+      "idiom": "iphone",
+      "filename": "40.png",
+      "scale": "3x"
+    },
+    {
+      "size": "1024x1024",
+      "idiom": "ios-marketing",
+      "filename": "1024.png",
+      "scale": "1x"
+    }
+  ],
+  "info": {
+    "version": 1,
+    "author": "xcode"
+  }
+}
+```
+
+Update this file to reflect the correct filenames for all required sizes.
+
+---
+
+### 4. Update `Info.plist`
+
+At the bottom of your `Info.plist`, insert the following configuration to define your app icons:
+
+#### Step 4.1: Add `CFBundleIcons`
+
+Add the following key for `CFBundleIcons`:
+
+```xml
+<key>CFBundleIcons</key>
+<dict>
+  <key>CFBundlePrimaryIcon</key>
+  <dict>
+    <key>CFBundleIconFiles</key>
+    <array>
+      <string>AppIcon</string>
+    </array>
+  </dict>
+  <key>CFBundleAlternateIcons</key>
+  <dict>
+    <key>AlternativeIcon</key>
+    <dict>
+      <key>CFBundleIconFiles</key>
+      <array>
+        <string>AlternativeIcon</string>
+      </array>
+    </dict>
+  </dict>
+</dict>
+```
+
+- **Primary Icon:** Set the first array item to the name of the `.appiconset` you created for the primary icon (e.g., `AppIcon`).
+- **Alternative Icons:** Add keys for each alternative icon, referencing the names of the `.appiconset` files (e.g., `AlternativeIcon`).
+
+---
+
+### 5. Configure Xcode Settings
+
+In Xcode, configure the following:
+
+1. Navigate to your app's **General** settings.
+2. Under the **App Icons and Launch Screen** section:
+   - Set **App Icon** to your default icon (e.g., `AppIcon`).
+   - Check the box for **Include all app icon assets**.
+
+![Xcode App Icon Settings]\(Ekran Resmi 2024-12-26 16.02.22.png)
+
+---
+
+### 6. Using `react-native-app-icon-changer` Functions
+
+The `react-native-app-icon-changer` package provides the following functions:
+
+#### 6.1 `setIcon(iconName: string | null)`
+
+This function sets the app icon to the specified icon name.
+
+- **Parameters:**
+  - `iconName`: The name of the alternative icon to set. Use `null` to revert to the primary icon.
+- **Example:**
+
+```javascript
+import ChangeIcon from "react-native-app-icon-changer";
+
+// Switch to the alternative icon
+ChangeIcon.setIcon("AlternativeIcon")
+  .then(() => console.log("Icon changed successfully!"))
+  .catch((err) => console.error("Failed to change icon: ", err));
+
+// Revert to the primary icon
+ChangeIcon.setIcon(null)
+  .then(() => console.log("Reverted to the default icon!"))
+  .catch((err) => console.error("Failed to revert icon: ", err));
+```
+
+#### 6.2 `getActiveIcon(): Promise<string | null>`
+
+This function retrieves the name of the currently active icon.
+
+- **Returns:**
+  - A promise resolving to the name of the active icon or `null` if the primary icon is active.
+- **Example:**
+
+```javascript
+ChangeIcon.getActiveIcon()
+  .then((activeIcon) => console.log("Current active icon:", activeIcon))
+  .catch((err) => console.error("Failed to get active icon: ", err));
+```
+
+#### 6.3 `getAlternativeIcons(): Promise<string[]>`
+
+This function retrieves a list of all alternative icons defined in the `Info.plist` file.
+
+- **Returns:**
+  - A promise resolving to an array of alternative icon names.
+- **Example:**
+
+```javascript
+ChangeIcon.getAlternativeIcons()
+  .then((icons) => console.log("Available alternative icons:", icons))
+  .catch((err) => console.error("Failed to get alternative icons: ", err));
+```
+
+#### 6.4 `resetIcon(): Promise<void>`
+
+This function resets the app icon to the primary icon.
+
+- **Example:**
+
+```javascript
+ChangeIcon.resetIcon()
+  .then(() => console.log("Icon reset to primary successfully!"))
+  .catch((err) => console.error("Failed to reset icon: ", err));
+```
+
+---
+
+### 7. Verify the Icons
+
+Test the implementation by running your app on an iOS simulator or physical device.
+
+1. Ensure the app icon switches correctly when triggered.
+2. Confirm both icons appear as shown in the screenshots:
+   - **Primary Icon**: ![Primary Icon Screenshot]\(Simulator Screenshot - iPhone 16 Pro - 2024-12-26 at 15.27.44.png)
+   - **Alternative Icon**: ![Alternative Icon Screenshot]\(Simulator Screenshot - iPhone 16 Pro - 2024-12-26 at 15.32.51.png)
+
+---
+
+### 8. References
+
+Refer to the official package documentation for more details: [react-native-app-icon-changer](https://www.npmjs.com/package/react-native-app-icon-changer).
+
