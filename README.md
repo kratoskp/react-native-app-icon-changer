@@ -152,6 +152,8 @@ In Xcode, configure the following:
 2. Under the **App Icons and Launch Screen** section:
    - Set **App Icon** to your default icon (e.g., `AppIcon`).
    - Check the box for **Include all app icon assets**.
+###  
+[<img src="./assets/screenshots/xcodeSettingsForIos.png" width="300"/>](./assets/screenshots/xcodeSettingsForIos.png)
 
 #### Primary Icon:
 [<img src="./assets/screenshots/defaultIcon-for-ios.png" width="250"/>](./assets/screenshots/defaultIcon-for-ios.png)
