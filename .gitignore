@@ -8,9 +8,10 @@
 # VSCode
 .vscode/
 jsconfig.json
-
+yarn.lock
 # Xcode
 #
+example
 build/
 *.pbxuser
 !default.pbxuser
