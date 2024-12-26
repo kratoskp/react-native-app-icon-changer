@@ -1,13 +1,23 @@
 [![npm version](https://badge.fury.io/js/react-native-app-icon-changer.svg)](https://badge.fury.io/js/react-native-app-icon-changer)
 ![GitHub stars](https://img.shields.io/github/stars/FerhatAdibelli0/react-native-app-icon-changer?style=social)
 
-# React Native App Icon Changer Setup
+# React Native App Icon Changer
 
 `react-native-app-icon-changer` is a powerful and easy-to-use library that allows you to dynamically manage app icons in your React Native projects. It supports both iOS and Android platforms, enabling seamless switching between multiple app icons without requiring manual intervention or complex configuration. Whether you want to personalize your app's appearance or highlight special events, this library simplifies the entire process.
 
 With `react-native-app-icon-changer`, you can dynamically change your app's icon during runtime. The package handles all necessary platform-specific configurations, ensuring a smooth integration process. Its primary use cases include event-based icon changes, seasonal themes, or user-specific customizations, providing enhanced user engagement and experience.
 
----
+## Key Features
+
+- **Dynamic App Icon Management**: Easily change your app icon at runtime for both iOS and Android.
+- **Cross-Platform Support**: Fully supports both iOS and Android devices, providing a consistent experience across platforms.
+- **No Manual Configuration**: Avoid manual changes to native code, making it simpler to use across different versions of React Native.
+- **Event-based Icon Switching**: Change app icons based on specific events or conditions in your app (e.g., holidays, promotions, or user preferences).
+
+## Compatibility
+
+- **React Native Old Architecture**: The library is fully compatible with the traditional React Native architecture (using the older bridging mechanism).
+- **React Native New Architecture**: It also supports the new React Native architecture (Fabric and TurboModules), ensuring smooth integration with the latest versions of React Native.
 
 ### 1. Install the `react-native-app-icon-changer` Package
 
@@ -152,13 +162,17 @@ In Xcode, configure the following:
 2. Under the **App Icons and Launch Screen** section:
    - Set **App Icon** to your default icon (e.g., `AppIcon`).
    - Check the box for **Include all app icon assets**.
-###  
+
+###
+
 [<img src="./assets/screenshots/xcodeSettingsForIos.png" width="300"/>](./assets/screenshots/xcodeSettingsForIos.png)
 
 #### Primary Icon:
+
 [<img src="./assets/screenshots/defaultIcon-for-ios.png" width="250"/>](./assets/screenshots/defaultIcon-for-ios.png)
 
 #### Alternative Icon:
+
 [<img src="./assets/screenshots/alternativeIcon-for-ios.png" width="250"/>](./assets/screenshots/alternativeIcon-for-ios.png)
 
 ---
@@ -321,7 +335,9 @@ This function retrieves the name of the currently active icon.
 - **Example:**
 
 ```javascript
-getActiveIcon().then((activeIcon) => console.log('Current active icon:', activeIcon));
+getActiveIcon().then((activeIcon) =>
+  console.log('Current active icon:', activeIcon)
+);
 ```
 
 ### 7.3 `getAllAlternativeIcons(): Promise<string[]>`
@@ -333,7 +349,9 @@ This function retrieves a list of all alternative icons defined in the project.
 - **Example:**
 
 ```javascript
-getAllAlternativeIcons().then((icons) => console.log('Available alternative icons:', icons));
+getAllAlternativeIcons().then((icons) =>
+  console.log('Available alternative icons:', icons)
+);
 ```
 
 ### 7.4 `resetIcon(): Promise<void>`
@@ -345,4 +363,3 @@ This function resets the app icon to the primary icon.
 ```javascript
 resetIcon().then(() => console.log('Icon reset to primary successfully!'));
 ```
-
