@@ -4,6 +4,8 @@
 
 # XDE
 .expo/
+yarn.lock
+
 
 # VSCode
 .vscode/
