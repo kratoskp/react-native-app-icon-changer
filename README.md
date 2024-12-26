@@ -304,12 +304,12 @@ import {
 This function sets the app icon to the specified icon name.
 
 - **Parameters:**
-  - `iconName`: The name of the alternative icon to set. Use `null` to revert to the primary icon.
+  - `iconName`: The name of the alternative icon to set.
 - **Example:**
 
 ```javascript
 setIcon('AlternativeIcon');
-setIcon(null); // Revert to default icon
+setIcon('Default'); // Revert to default icon
 ```
 
 ### 7.2 `getActiveIcon(): Promise<string | null>`
