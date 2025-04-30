@@ -138,9 +138,7 @@ class AppIconChangerModule(
         setIcon("Default", promise)
     }
 
-    override fun onActivityPaused(activity: Activity) {
-        completeIconChange()
-    }
+    override fun onActivityPaused(activity: Activity) {}
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
