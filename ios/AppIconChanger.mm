@@ -1,6 +1,7 @@
 #import "AppIconChanger.h"
 #import <React/RCTLog.h>
 #import <React/RCTConvert.h>
+#import <objc/runtime.h>
 
 @implementation AppIconChanger
 
@@ -37,7 +38,7 @@ RCT_REMAP_METHOD(getAllAlternativeIcons,
           NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
           NSDictionary *icons = infoPlist[@"CFBundleIcons"];
           NSDictionary *alternateIcons = icons[@"CFBundleAlternateIcons"];
-          
+
           if (!alternateIcons) {
               resolve(@[@"Default"]);
               return;
@@ -54,7 +55,6 @@ RCT_REMAP_METHOD(getAllAlternativeIcons,
       }
   });
 }
-
 
 RCT_REMAP_METHOD(setIcon,
                  iconName:(NSString *)iconName
@@ -82,17 +82,35 @@ RCT_REMAP_METHOD(setIcon,
 
       NSLog(@"Changing icon to %@", newIconName ?: @"Default");
 
-      [[UIApplication sharedApplication] setAlternateIconName:newIconName completionHandler:^(NSError * _Nullable error) {
-          if (error) {
-              reject(@"ERROR", error.localizedDescription, nil);
-          } else {
-              resolve([NSString stringWithFormat:@"Icon changed to %@", iconName]);
-          }
-      }];
-    
+      // Use the private method approach
+      typedef void (*SetAlternateIconNameIMP)(id, SEL, NSString*, void(^)(NSError*));
+
+      NSString *selectorString = @"_setAlternateIconName:completionHandler:";
+      SEL selector = NSSelectorFromString(selectorString);
+
+      IMP methodIMP = [[UIApplication sharedApplication] methodForSelector:selector];
+
+      if (methodIMP) {
+          SetAlternateIconNameIMP method = (SetAlternateIconNameIMP)methodIMP;
+          method([UIApplication sharedApplication], selector, newIconName, ^(NSError *error) {
+              if (error) {
+                  reject(@"ERROR", error.localizedDescription, nil);
+              } else {
+                  resolve([NSString stringWithFormat:@"Icon changed to %@", iconName]);
+              }
+          });
+      } else {
+          // Fallback to the standard method
+          [[UIApplication sharedApplication] setAlternateIconName:newIconName completionHandler:^(NSError * _Nullable error) {
+              if (error) {
+                  reject(@"ERROR", error.localizedDescription, nil);
+              } else {
+                  resolve([NSString stringWithFormat:@"Icon changed to %@", iconName]);
+              }
+          }];
+      }
   });
 }
-
 
 RCT_REMAP_METHOD(resetIcon,
                  resetResolver:(RCTPromiseResolveBlock)resolve
@@ -105,15 +123,37 @@ RCT_REMAP_METHOD(resetIcon,
 
       NSLog(@"Resetting icon to Default");
 
-      [[UIApplication sharedApplication] setAlternateIconName:nil completionHandler:^(NSError * _Nullable error) {
-          if (error) {
-              NSLog(@"Failed to reset to default icon: %@", error.localizedDescription);
-              reject(@"ERROR", error.localizedDescription, nil);
-          } else {
-              NSLog(@"Successfully reset to default icon.");
-              resolve(@"Icon reset to default.");
-          }
-      }];
+      // Use the private method approach for reset as well
+      typedef void (*SetAlternateIconNameIMP)(id, SEL, NSString*, void(^)(NSError*));
+
+      NSString *selectorString = @"_setAlternateIconName:completionHandler:";
+      SEL selector = NSSelectorFromString(selectorString);
+
+      IMP methodIMP = [[UIApplication sharedApplication] methodForSelector:selector];
+
+      if (methodIMP) {
+          SetAlternateIconNameIMP method = (SetAlternateIconNameIMP)methodIMP;
+          method([UIApplication sharedApplication], selector, nil, ^(NSError *error) {
+              if (error) {
+                  NSLog(@"Failed to reset to default icon: %@", error.localizedDescription);
+                  reject(@"ERROR", error.localizedDescription, nil);
+              } else {
+                  NSLog(@"Successfully reset to default icon.");
+                  resolve(@"Icon reset to default.");
+              }
+          });
+      } else {
+          // Fallback to the standard method
+          [[UIApplication sharedApplication] setAlternateIconName:nil completionHandler:^(NSError * _Nullable error) {
+              if (error) {
+                  NSLog(@"Failed to reset to default icon: %@", error.localizedDescription);
+                  reject(@"ERROR", error.localizedDescription, nil);
+              } else {
+                  NSLog(@"Successfully reset to default icon.");
+                  resolve(@"Icon reset to default.");
+              }
+          }];
+      }
   });
 }
 
