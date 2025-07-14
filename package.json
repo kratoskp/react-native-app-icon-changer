@@ -37,6 +37,7 @@
     "!**/.*"
   ],
   "scripts": {
+    "postinstall": "yarn run prepare",
     "example": "yarn workspace react-native-app-icon-changer-example",
     "test": "jest",
     "typecheck": "tsc",
