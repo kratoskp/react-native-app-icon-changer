@@ -117,21 +117,40 @@ class AppIconChangerModule(
         }
 
         try {
-            activity.packageManager.setComponentEnabledSetting(
+            val pm = activity.packageManager
+
+            // --- Disable ALL aliases first ---
+            val packageInfo = pm.getPackageInfo(
+                packageName,
+                PackageManager.GET_ACTIVITIES or PackageManager.GET_META_DATA or PackageManager.GET_DISABLED_COMPONENTS
+            )
+
+            packageInfo.activities?.forEach { activityInfo ->
+                if (activityInfo.targetActivity != null) { // it's an alias
+                    pm.setComponentEnabledSetting(
+                        ComponentName(packageName, activityInfo.name),
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                        PackageManager.DONT_KILL_APP
+                    )
+                }
+            }
+
+            // --- Enable the chosen one ---
+            pm.setComponentEnabledSetting(
                 ComponentName(packageName, activeClass),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP
             )
+
             promise.resolve("Your icon changed to $iconName")
         } catch (e: Exception) {
             promise.reject("ICON_INVALID", e.localizedMessage)
             return
         }
 
-        classesToKill.add(componentClass)
         componentClass = activeClass
-        activity.application.registerActivityLifecycleCallbacks(this)
     }
+
 
     @ReactMethod
     fun resetIcon(promise: Promise) {
