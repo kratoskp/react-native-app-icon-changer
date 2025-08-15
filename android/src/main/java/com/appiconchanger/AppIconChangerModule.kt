@@ -98,56 +98,69 @@ class AppIconChangerModule(
             promise.reject("ACTIVITY_NOT_FOUND", "The activity is null. Check if the app is running properly.")
             return
         }
-
+    
         if (iconName.isNullOrEmpty()) {
             promise.reject("EMPTY_ICON_STRING", "Icon name is missing i.e. setIcon('YOUR_ICON_NAME_HERE')")
             return
         }
-
+    
         if (componentClass.isEmpty()) {
             componentClass = activity.componentName.className
         }
-
+    
         val newIconName = if (iconName.isEmpty()) "Default" else iconName
         val activeClass = "$packageName$MAIN_ACTIVITY_BASE_NAME$newIconName"
-
+    
         if (componentClass == activeClass) {
             promise.reject("ICON_ALREADY_USED", "This icon is the current active icon. $componentClass")
             return
         }
-
+    
         try {
             val pm = activity.packageManager
-
-            // --- Disable ALL aliases first ---
-            val packageInfo = pm.getPackageInfo(
-                packageName,
-                PackageManager.GET_ACTIVITIES or PackageManager.GET_META_DATA or PackageManager.GET_DISABLED_COMPONENTS
-            )
-
-            packageInfo.activities?.forEach { activityInfo ->
-                if (activityInfo.targetActivity != null) { // it's an alias
-                    pm.setComponentEnabledSetting(
-                        ComponentName(packageName, activityInfo.name),
-                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                        PackageManager.DONT_KILL_APP
-                    )
+            val isSamsung = android.os.Build.MANUFACTURER.equals("samsung", ignoreCase = true)
+    
+            if (isSamsung) {
+                // --- Samsung: Disable ALL aliases first ---
+                val packageInfo = pm.getPackageInfo(
+                    packageName,
+                    PackageManager.GET_ACTIVITIES or PackageManager.GET_META_DATA or PackageManager.GET_DISABLED_COMPONENTS
+                )
+    
+                packageInfo.activities?.forEach { activityInfo ->
+                    if (activityInfo.targetActivity != null) { // it's an alias
+                        pm.setComponentEnabledSetting(
+                            ComponentName(packageName, activityInfo.name),
+                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                            PackageManager.DONT_KILL_APP
+                        )
+                    }
                 }
+    
+                // Enable the chosen one immediately
+                pm.setComponentEnabledSetting(
+                    ComponentName(packageName, activeClass),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP
+                )
+            } else {
+                // --- Other brands: Original behavior ---
+                pm.setComponentEnabledSetting(
+                    ComponentName(packageName, activeClass),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP
+                )
+    
+                classesToKill.add(componentClass)
+                activity.application.registerActivityLifecycleCallbacks(this)
             }
-
-            // --- Enable the chosen one ---
-            pm.setComponentEnabledSetting(
-                ComponentName(packageName, activeClass),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP
-            )
-
+    
             promise.resolve("Your icon changed to $iconName")
         } catch (e: Exception) {
             promise.reject("ICON_INVALID", e.localizedMessage)
             return
         }
-
+    
         componentClass = activeClass
     }
 
