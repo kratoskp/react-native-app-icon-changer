@@ -118,17 +118,31 @@ class AppIconChangerModule(
     
         try {
             val pm = activity.packageManager
-            val isSamsung = android.os.Build.MANUFACTURER.equals("samsung", ignoreCase = true)
     
-            if (isSamsung) {
-                // --- Samsung: Disable ALL aliases first ---
+            // Detect launcher only once and cache it
+            if (cachedLauncherPackage == null || isSamsungStockLauncher == null) {
+                val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+                val resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                cachedLauncherPackage = resolveInfo?.activityInfo?.packageName ?: "unknown"
+                isSamsungStockLauncher =
+                    android.os.Build.MANUFACTURER.equals("samsung", ignoreCase = true) &&
+                    cachedLauncherPackage == "com.sec.android.app.launcher"
+    
+                Log.d(NAME, "Launcher detected: $cachedLauncherPackage | Samsung stock: $isSamsungStockLauncher")
+            }
+    
+            if (isSamsungStockLauncher == true) {
+                Log.d(NAME, "Samsung stock launcher detected → applying safe switch")
+    
+                // 1. Disable ALL aliases first
                 val packageInfo = pm.getPackageInfo(
                     packageName,
                     PackageManager.GET_ACTIVITIES or PackageManager.GET_META_DATA or PackageManager.GET_DISABLED_COMPONENTS
                 )
     
                 packageInfo.activities?.forEach { activityInfo ->
-                    if (activityInfo.targetActivity != null) { // it's an alias
+                    if (activityInfo.targetActivity != null) {
+                        Log.d(NAME, "Disabling alias: ${activityInfo.name}")
                         pm.setComponentEnabledSetting(
                             ComponentName(packageName, activityInfo.name),
                             PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
@@ -137,32 +151,36 @@ class AppIconChangerModule(
                     }
                 }
     
-                // Enable the chosen one immediately
+                // 2. Enable only the chosen alias
+                Log.d(NAME, "Enabling alias: $activeClass")
                 pm.setComponentEnabledSetting(
                     ComponentName(packageName, activeClass),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP
                 )
             } else {
-                // --- Other brands: Original behavior ---
+                Log.d(NAME, "Non-Samsung or non-stock launcher detected → using delayed disable method")
+    
+                // Enable new one
                 pm.setComponentEnabledSetting(
                     ComponentName(packageName, activeClass),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP
                 )
     
+                // Schedule old one for disable on lifecycle
                 classesToKill.add(componentClass)
                 activity.application.registerActivityLifecycleCallbacks(this)
             }
     
+            // Success
+            componentClass = activeClass
             promise.resolve("Your icon changed to $iconName")
         } catch (e: Exception) {
             promise.reject("ICON_INVALID", e.localizedMessage)
-            return
         }
-    
-        componentClass = activeClass
     }
+
 
 
     @ReactMethod
